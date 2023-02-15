@@ -1,4 +1,21 @@
-# Avro Kafka Producer Spring Boot
+# Avro Kafka SSL Producer Spring Boot
+
+### Setup
+
+Get avro schema from schema registry and put it in src/main/avro/avro-schema.avsc
+Change according to the schema the file src/main/java/com/example/avrokafkaproducer/controller/AvroKafkaProducerController.java
+
+Put the proper kafka configuration properties in the application.properties file and put trustore.jks in resources folder
+
+```properties
+spring.kafka.ssl.trust-store-location=classpath:/truststore.jks
+spring.kafka.ssl.trust-store-password=${truststore-password}
+spring.kafka.bootstrap-servers=${kafa-server}
+spring.kafka.properties.schema.registry.url=${schema-registry-url}
+spring.kafka.producer.properties.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=${avro-producer-user} password="${avro-producer-password}";
+spring.kafka.template.default-topic=${avro-topic}
+```
+
 
 ### Build and Run Application
 
@@ -7,43 +24,10 @@
 ./gradlew bootRun 
 ```
 
-### Infrastructure
-
-Import docker-compose from confluent
-
-```shell
-curl --silent --output docker-compose.yml \
-https://raw.githubusercontent.com/obsidiandynamics/kafdrop/master/docker-compose/kafka-kafdrop/docker-compose.yaml
-```
-
-Run docker compose
-
-```shell
-docker-compose up -d
-```
-
-- kafka server: *localhost:9092*
-- schema registry url: *http://localhost:8081*
-
-Create topic:
-
-- topic: *my-topic*
-
-Create avro schema:
-
-- avro schema: *src/main/avro/user-v1.avsc*
-
 ### Usage
 
 Publish Avro message to topic:
 
 ```shell
-curl --location --request GET 'localhost:8080/kafka/publish/HelloAvro'
+curl --location --request GET 'localhost:8080/kafka/publish'
 ```
-
-### Reference Documentation
-
-- https://docs.confluent.io/platform/current/quickstart/ce-docker-quickstart.html
-- https://docs.confluent.io/platform/current/schema-registry/serdes-develop/serdes-avro.html
-- https://docs.confluent.io/platform/current/schema-registry/develop/maven-plugin.html
-- https://github.com/davidmc24/gradle-avro-plugin

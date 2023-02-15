@@ -5,6 +5,9 @@ plugins {
     id "com.github.davidmc24.gradle.plugin.avro" version '1.0.0'
 }
 
+apply plugin: 'idea'
+apply plugin: 'java'
+
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
